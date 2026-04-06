@@ -9,6 +9,7 @@
   },
   "scripts": {
     "test": "jest --verbose",
+    "test:hw15": "jest \"HW 15.1. Error Handling\" --verbose",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:staged": "node scripts/run-eslint-on-staged.js",

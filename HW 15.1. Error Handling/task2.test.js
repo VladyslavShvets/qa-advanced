@@ -1,5 +1,9 @@
 const axios = require('axios');
-const { fetchWithHeadersAndParams } = require('./task2');
+const {
+  USERS_URL,
+  buildUsersRequestConfig,
+  fetchWithHeadersAndParams,
+} = require('./task2');
 
 jest.mock('axios');
 
@@ -8,44 +12,47 @@ describe('Task 2: Testing Request Headers and Params', () => {
     jest.clearAllMocks();
   });
 
-  it('should include correct Authorization header in request', async () => {
-    axios.get.mockResolvedValue({ data: { users: [] } });
+  it('sends custom headers and params in the axios request config', async () => {
+    const mockUsers = [{ id: 1, name: 'Leanne Graham' }];
+    const options = {
+      token: 'custom-token',
+      requestId: 'req-42',
+      headers: {
+        'X-Test-Mode': 'jest',
+      },
+      params: {
+        page: 2,
+        limit: 10,
+        role: 'admin',
+      },
+    };
+    const expectedConfig = buildUsersRequestConfig(options);
 
-    await fetchWithHeadersAndParams(42);
+    axios.get.mockResolvedValue({ data: mockUsers });
 
-    const config = axios.get.mock.calls[0][1];
-    expect(config.headers).toHaveProperty('Authorization', 'Bearer my-secret-token');
+    const result = await fetchWithHeadersAndParams(options);
+
+    expect(axios.get).toHaveBeenCalledWith(USERS_URL, expectedConfig);
+    expect(result).toEqual(mockUsers);
   });
 
-  it('should include correct custom header in request', async () => {
-    axios.get.mockResolvedValue({ data: { users: [] } });
+  it('keeps default headers and params when custom values are omitted', () => {
+    const config = buildUsersRequestConfig({
+      params: { role: 'viewer' },
+    });
 
-    await fetchWithHeadersAndParams(42);
-
-    const config = axios.get.mock.calls[0][1];
-    expect(config.headers).toHaveProperty('X-Custom-Header', 'qa-automation');
-  });
-
-  it('should include correct query parameters in request', async () => {
-    axios.get.mockResolvedValue({ data: { users: [] } });
-
-    await fetchWithHeadersAndParams(42);
-
-    const config = axios.get.mock.calls[0][1];
-    expect(config.params).toEqual({ userId: 42, active: true, limit: 10 });
-  });
-
-  it('should call the correct URL', async () => {
-    axios.get.mockResolvedValue({ data: { users: [] } });
-
-    await fetchWithHeadersAndParams(42);
-
-    expect(axios.get).toHaveBeenCalledWith(
-      'https://api.example.com/users',
-      expect.objectContaining({
-        headers: expect.any(Object),
-        params: expect.any(Object),
-      })
-    );
+    expect(config).toEqual({
+      headers: {
+        Authorization: 'Bearer qa-advanced-token',
+        'X-Request-Id': 'hw-15-1',
+        'Content-Type': 'application/json',
+      },
+      params: {
+        page: 1,
+        limit: 5,
+        active: true,
+        role: 'viewer',
+      },
+    });
   });
 });

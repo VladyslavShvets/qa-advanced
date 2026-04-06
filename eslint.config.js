@@ -26,4 +26,19 @@ module.exports = [
       "prefer-const": "warn",
     },
   },
+  {
+    files: ["**/*.test.js"],
+    languageOptions: {
+      globals: {
+        jest: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        expect: "readonly",
+        beforeAll: "readonly",
+        beforeEach: "readonly",
+        afterAll: "readonly",
+        afterEach: "readonly",
+      },
+    },
+  },
 ]

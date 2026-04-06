@@ -1,23 +1,44 @@
 const axios = require('axios');
 
-/**
- * Task 3: Mocking Axios in Jest
- * Functions that make HTTP requests — to be fully mocked in tests.
- */
+const USERS_URL = 'https://jsonplaceholder.typicode.com/users';
 
-async function getUser(id) {
-  const response = await axios.get(`https://api.example.com/users/${id}`);
-  return response.data;
+function createRequestError(action, error) {
+  const requestError = new Error(`${action} failed: ${error.message}`);
+  requestError.cause = error;
+
+  return requestError;
 }
 
-async function createUser(userData) {
-  const response = await axios.post('https://api.example.com/users', userData);
-  return response.data;
+async function getUser(id, client = axios) {
+  try {
+    const response = await client.get(`${USERS_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    throw createRequestError(`Fetching user ${id}`, error);
+  }
 }
 
-async function deleteUser(id) {
-  const response = await axios.delete(`https://api.example.com/users/${id}`);
-  return response.data;
+async function createUser(userData, client = axios) {
+  try {
+    const response = await client.post(USERS_URL, userData);
+    return response.data;
+  } catch (error) {
+    throw createRequestError('Creating user', error);
+  }
 }
 
-module.exports = { getUser, createUser, deleteUser };
+async function deleteUser(id, client = axios) {
+  try {
+    const response = await client.delete(`${USERS_URL}/${id}`);
+    return response.data;
+  } catch (error) {
+    throw createRequestError(`Deleting user ${id}`, error);
+  }
+}
+
+module.exports = {
+  USERS_URL,
+  createUser,
+  deleteUser,
+  getUser,
+};

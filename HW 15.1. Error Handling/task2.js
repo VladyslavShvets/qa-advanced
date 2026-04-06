@@ -1,29 +1,36 @@
 const axios = require('axios');
 
-/**
- * Task 2: Testing Request Headers and Params
- * Makes a GET request with custom headers and URL query parameters.
- */
-async function fetchWithHeadersAndParams(userId) {
-  const config = {
+const USERS_URL = 'https://jsonplaceholder.typicode.com/users';
+
+function buildUsersRequestConfig(options = {}) {
+  const { token = 'qa-advanced-token', requestId = 'hw-15-1', headers = {}, params = {} } =
+    options;
+
+  return {
     headers: {
-      Authorization: 'Bearer my-secret-token',
-      'X-Custom-Header': 'qa-automation',
+      Authorization: `Bearer ${token}`,
+      'X-Request-Id': requestId,
       'Content-Type': 'application/json',
+      ...headers,
     },
     params: {
-      userId,
+      page: 1,
+      limit: 5,
       active: true,
-      limit: 10,
+      ...params,
     },
   };
-
-  try {
-    const response = await axios.get('https://api.example.com/users', config);
-    return response.data;
-  } catch (error) {
-    return { error: error.message };
-  }
 }
 
-module.exports = { fetchWithHeadersAndParams };
+async function fetchWithHeadersAndParams(options = {}, client = axios) {
+  const config = buildUsersRequestConfig(options);
+  const response = await client.get(USERS_URL, config);
+
+  return response.data;
+}
+
+module.exports = {
+  USERS_URL,
+  buildUsersRequestConfig,
+  fetchWithHeadersAndParams,
+};
