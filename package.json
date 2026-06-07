@@ -14,6 +14,8 @@
     "cy:run": "cypress run",
     "cy:run:qauto": "cypress run --config-file cypress.config.qauto.js --spec cypress/e2e/qauto_garage_expenses.cy.js",
     "cy:run:qauto2": "cypress run --config-file cypress.config.qauto2.js --spec cypress/e2e/qauto_garage_expenses.cy.js",
+    "pw:open": "playwright test --ui",
+    "pw:run": "playwright test",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:staged": "node scripts/run-eslint-on-staged.js",
@@ -34,6 +36,7 @@
   },
   "homepage": "https://github.com/VladyslavShvets/qa-advanced#readme",
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "cypress": "^15.16.0",
     "eslint": "^10.0.3",
     "husky": "^9.1.7",

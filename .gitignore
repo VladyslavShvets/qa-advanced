@@ -5,3 +5,5 @@ cypress/screenshots/
 cypress/videos/
 cypress/downloads/
 cypress/reports/
+playwright-report/
+test-results/
