@@ -1,1 +1,8 @@
-// Place reusable Cypress commands and global e2e hooks here.
+Cypress.Commands.add("visitQAutoHomePage", () => {
+  cy.visit("/", {
+    auth: {
+      username: "guest",
+      password: "welcome2qauto",
+    },
+  })
+})
