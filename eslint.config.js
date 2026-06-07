@@ -1,6 +1,13 @@
 module.exports = [
   {
-    ignores: ["node_modules/**", ".husky/_/**"],
+    ignores: [
+      "node_modules/**",
+      ".husky/_/**",
+      "cypress/downloads/**",
+      "cypress/reports/**",
+      "cypress/screenshots/**",
+      "cypress/videos/**",
+    ],
   },
   {
     files: ["**/*.js"],

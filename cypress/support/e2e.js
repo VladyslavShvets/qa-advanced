@@ -1,10 +1,14 @@
-Cypress.Commands.add("visitQAutoHomePage", () => {
-  cy.visit("/", {
+Cypress.Commands.add("visitQAutoPage", (path = "/") => {
+  cy.visit(path, {
     auth: {
       username: "guest",
       password: "welcome2qauto",
     },
   })
+})
+
+Cypress.Commands.add("visitQAutoHomePage", () => {
+  cy.visitQAutoPage("/")
 })
 
 Cypress.Commands.add("openRegistrationModal", () => {
