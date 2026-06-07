@@ -55,6 +55,7 @@ module.exports = [
         cy: "readonly",
         Cypress: "readonly",
         describe: "readonly",
+        expect: "readonly",
         it: "readonly",
         before: "readonly",
         beforeEach: "readonly",
