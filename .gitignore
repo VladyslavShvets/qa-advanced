@@ -1,3 +1,6 @@
 node_modules/
 .husky/_/
 .DS_Store
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
