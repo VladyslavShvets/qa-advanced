@@ -7,6 +7,8 @@ module.exports = [
       "cypress/reports/**",
       "cypress/screenshots/**",
       "cypress/videos/**",
+      "playwright-report/**",
+      "test-results/**",
     ],
   },
   {
@@ -61,6 +63,14 @@ module.exports = [
         beforeEach: "readonly",
         after: "readonly",
         afterEach: "readonly",
+      },
+    },
+  },
+  {
+    files: ["playwright/**/*.js"],
+    languageOptions: {
+      globals: {
+        require: "readonly",
       },
     },
   },
