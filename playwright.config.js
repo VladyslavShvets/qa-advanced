@@ -1,4 +1,19 @@
 const { defineConfig, devices } = require("@playwright/test")
+require("dotenv").config({ quiet: true })
+
+const requiredEnv = (name) => {
+  const value = process.env[name]
+
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`)
+  }
+
+  return value
+}
+
+const baseURL = requiredEnv("QAUTO_BASE_URL")
+const username = requiredEnv("QAUTO_AUTH_USERNAME")
+const password = requiredEnv("QAUTO_AUTH_PASSWORD")
 
 module.exports = defineConfig({
   testDir: "./playwright/tests",
@@ -8,10 +23,10 @@ module.exports = defineConfig({
   },
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: "https://qauto.forstudy.space",
+    baseURL,
     httpCredentials: {
-      username: "guest",
-      password: "welcome2qauto",
+      username,
+      password,
     },
     trace: "on-first-retry",
     screenshot: "only-on-failure",
