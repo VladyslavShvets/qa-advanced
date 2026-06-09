@@ -7,3 +7,4 @@ cypress/downloads/
 cypress/reports/
 playwright-report/
 test-results/
+playwright/.auth/
