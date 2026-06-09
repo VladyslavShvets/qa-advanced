@@ -29,17 +29,20 @@ describe("Garage and fuel expenses", () => {
       totalCost: 50,
     }
 
-    cy.env(["userEmail", "userPassword"]).then(
-      ({ userEmail, userPassword }) => {
-        cy.login(userEmail, userPassword)
-      }
-    )
+    cy.login(Cypress.env("userEmail"), Cypress.env("userPassword"))
+    cy.intercept("POST", "**/api/cars").as("createCar")
 
     garagePage.visit()
     garagePage.addCar(car)
-    garagePage.openFuelExpenses()
 
-    expensesPage.addExpense(expense)
-    expensesPage.assertExpenseIsVisible(expense)
+    cy.wait("@createCar").then(({ response }) => {
+      expect(response.statusCode).to.eq(201)
+      garagePage.openFuelExpenses()
+      expensesPage.addExpense({
+        ...expense,
+        useCurrentVehicle: true,
+      })
+      expensesPage.assertExpenseIsVisible(expense)
+    })
   })
 })

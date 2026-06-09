@@ -19,11 +19,7 @@ describe("QAuto API testing with Cypress", () => {
       mileage,
     }
 
-    cy.env(["userEmail", "userPassword"]).then(
-      ({ userEmail, userPassword }) => {
-        cy.login(userEmail, userPassword)
-      }
-    )
+    cy.login(Cypress.env("userEmail"), Cypress.env("userPassword"))
 
     cy.intercept("POST", "**/api/cars").as("createCar")
 
@@ -79,11 +75,7 @@ describe("QAuto API testing with Cypress", () => {
       mileage,
     }
 
-    cy.env(["userEmail", "userPassword"]).then(
-      ({ userEmail, userPassword }) => {
-        cy.login(userEmail, userPassword)
-      }
-    )
+    cy.login(Cypress.env("userEmail"), Cypress.env("userPassword"))
 
     cy.intercept("POST", "**/api/cars").as("createCar")
 
