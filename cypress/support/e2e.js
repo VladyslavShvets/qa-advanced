@@ -30,6 +30,29 @@ Cypress.Commands.add("login", (email, password) => {
   cy.contains("button", "Add car").should("be.visible")
 })
 
+Cypress.Commands.add("createExpense", (expense) => {
+  cy.request({
+    method: "POST",
+    url: "/api/expenses",
+    auth: {
+      username: "guest",
+      password: "welcome2qauto",
+    },
+    body: expense,
+  }).then((response) => {
+    expect(response.status).to.eq(200)
+    expect(response.body.status).to.eq("ok")
+    expect(response.body.data).to.include({
+      carId: expense.carId,
+      mileage: expense.mileage,
+      liters: expense.liters,
+      totalCost: expense.totalCost,
+    })
+
+    return response.body.data
+  })
+})
+
 Cypress.Commands.overwrite(
   "type",
   (originalFn, element, text, options = {}) => {
