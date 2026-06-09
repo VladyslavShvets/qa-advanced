@@ -4,17 +4,28 @@ class ExpensesPage {
     cy.contains(".modal-title", "Add an expense").should("be.visible")
   }
 
-  addExpense({ vehicle, reportedAt, mileage, liters, totalCost }) {
+  addExpense({
+    vehicle,
+    useCurrentVehicle = false,
+    reportedAt,
+    mileage,
+    liters,
+    totalCost,
+  }) {
     this.openAddExpenseModal()
-    cy.get("#addExpenseCar")
-      .should("be.enabled")
-      .find("option")
-      .filter((_, option) => option.innerText.trim() === vehicle)
-      .last()
-      .invoke("val")
-      .then((vehicleValue) => {
-        cy.get("#addExpenseCar").select(vehicleValue)
-      })
+
+    if (!useCurrentVehicle) {
+      cy.get("#addExpenseCar")
+        .should("be.enabled")
+        .find("option")
+        .filter((_, option) => option.innerText.trim() === vehicle)
+        .last()
+        .invoke("val")
+        .then((vehicleValue) => {
+          cy.get("#addExpenseCar").select(vehicleValue)
+        })
+    }
+
     cy.get("#addExpenseDate").clear().type(reportedAt)
     cy.get("#addExpenseMileage").clear().type(String(mileage))
     cy.get("#addExpenseLiters").clear().type(String(liters))
