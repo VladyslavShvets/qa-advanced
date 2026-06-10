@@ -1,0 +1,77 @@
+name: Docker test run
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cypress:
+    name: Cypress in Docker
+    runs-on: ubuntu-latest
+    container:
+      image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Cypress tests in Docker
+        run: >
+          npx cypress run
+          --browser chrome
+          --config-file cypress.config.qauto.js
+          --spec cypress/e2e/qauto_garage_expenses.cy.js
+
+      - name: Upload Cypress reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-reports
+          path: |
+            cypress/reports
+            cypress/screenshots
+          if-no-files-found: ignore
+
+  playwright:
+    name: Playwright in Docker
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.39.0-jammy
+    env:
+      QAUTO_BASE_URL: https://qauto.forstudy.space
+      QAUTO_AUTH_USERNAME: guest
+      QAUTO_AUTH_PASSWORD: welcome2qauto
+      QAUTO_USER_NAME: Vlad
+      QAUTO_USER_LAST_NAME: Shvets
+      QAUTO_USER_EMAIL: aqa-playwright-ci-vlad-shvets@test.com
+      QAUTO_USER_PASSWORD: Password1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install matching Playwright browser
+        run: npx playwright install chromium
+
+      - name: Run Playwright tests in Docker
+        run: npm run pw:run
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
